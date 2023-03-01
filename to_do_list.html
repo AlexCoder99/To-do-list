@@ -1,0 +1,143 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+     rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/aab5eba56e.js" crossorigin="anonymous"></script>
+    <title>To Do Project</title>
+</head>
+
+<body>
+
+    <style>
+        
+        body{
+            background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+        }
+
+        .container{
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 50px;
+            border: 2px double #1a1919b1;
+            border-radius: 40px;
+            background-color: #9f90904f;
+        }
+
+      
+        input[type="text"]::-webkit-input-placeholder{
+            color: #ffffff8a;
+        }
+
+        input[type=text],
+        input[type=text]:focus{
+            color: white;
+            border: none;
+            background: rgba(0,0,0,.2);
+            max-width: 500px;
+        }
+
+
+        .todos li{
+            background:#423a6fc4;
+        }
+
+        .delete{
+            cursor: pointer;
+        }
+
+        .filtered{
+            display: none !important;
+        }
+
+
+
+    </style>
+
+   <div class="container">
+
+    <header class="text-center text-light my-4">
+        <h1 class="mb-4 p-2 bg-warning">ToDo list</h1>
+        <form class="search">
+            <input class="form-control m-auto" type="text" name="search" placeholder="search todos &#128270" autocomplete="off">
+        </form>
+    </header>
+
+    <ul class="list-group todos mx-auto text-light">
+
+    </ul>
+
+    <form class="newEl text-center my-4">
+        <label class="text-light my-1">Add a new ToDo...</label>
+        <input class="form-control m-auto" type="text" name="newEl" autocomplete="off"> 
+    </form>
+
+
+   </div>
+   
+    <script>
+
+
+        let addForm = document.querySelector('.newEl');
+        let list = document.querySelector('.todos');
+        let searchEngine = document.querySelector('.search input');
+
+        // aggiunge la parola immessa nella lista dei to do
+        function generateTemplate(todo){
+            const html = `
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>${todo}</span>
+                    <i class="fas fa-check-circle delete"></i>
+                </li>
+            `;
+            list.innerHTML += html;
+        }
+
+
+        // creazione input to do
+        addForm.addEventListener('submit', (e) =>{
+            e.preventDefault();
+            const todo = addForm.newEl.value.trim(); /*la query per il todo si fa referenziando il form, l'input e il suo valore*/
+            if(todo.length){
+                generateTemplate(todo);
+                addForm.reset();
+            }
+        });
+
+        // eliminazione to do dalla lista
+        list.addEventListener('click', (e) =>{
+            const tick = e.target.classList.contains('delete');
+            if(tick){
+                e.target.parentElement.remove();
+            }
+        });
+
+
+        //filtraggio contenuti e ricerca dei todo
+        const filterTodos = (term) => {   
+            Array.from(list.children)  /*conversione dei to do in array per usare metodi*/
+            .filter(val => !val.textContent.toLowerCase().includes(term)) 
+            .forEach(val => val.classList.add('filtered'));  /*nasconde to do che non corrispondono al termine cercato*/
+
+            Array.from(list.children)
+            .filter(val => val.textContent.toLowerCase().includes(term))
+            .forEach(val => val.classList.remove('filtered'));  /*mostra to do che corrisponde al termine cercato*/
+            
+            
+        };
+
+        searchEngine.addEventListener('keyup', () =>{
+            const term = searchEngine.value.trim().toLowerCase();
+            filterTodos(term);
+        });
+
+
+        
+    </script>
+
+
+</body>
+
+</html>
